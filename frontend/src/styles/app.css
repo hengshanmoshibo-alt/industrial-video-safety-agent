@@ -1,0 +1,242 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f6f8;
+  color: #1f2933;
+  font-family: Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.sidebar {
+  border-right: 1px solid #e5e7eb;
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  height: 72px;
+  padding: 0 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.brand .anticon {
+  font-size: 26px;
+  color: #1677ff;
+}
+
+.brand h4 {
+  margin: 0;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 56px;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.content {
+  padding: 24px;
+}
+
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.page-head h1 {
+  margin: 0 0 4px;
+  font-size: 24px;
+}
+
+.page-head p {
+  margin: 0;
+  color: #667085;
+}
+
+.section-card {
+  margin-top: 16px;
+}
+
+.auth-card {
+  max-width: 360px;
+  margin: 80px auto;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.chat-layout {
+  display: grid;
+  place-items: start center;
+}
+
+.chat-panel {
+  width: min(760px, 100%);
+}
+
+.message-list {
+  min-height: 420px;
+  max-height: 520px;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.message-row {
+  border: 0 !important;
+}
+
+.message-row.visitor {
+  justify-content: flex-end;
+}
+
+.message-bubble {
+  max-width: 78%;
+  padding: 12px;
+  background: #f2f4f7;
+  border-radius: 8px;
+}
+
+.message-row.visitor .message-bubble {
+  color: #fff;
+  background: #1677ff;
+}
+
+.message-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.chat-input {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.handoff-btn {
+  margin-top: 8px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  background: #f8fafc;
+}
+
+.agent-messages {
+  min-height: 360px;
+}
+
+.ml8 {
+  margin-left: 8px;
+}
+
+.mt8 {
+  margin-top: 8px;
+}
+
+.mb8 {
+  margin-bottom: 8px;
+}
+
+.mt16 {
+  margin-top: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.audit-report {
+  display: grid;
+  gap: 18px;
+}
+
+.audit-report section {
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.audit-report section:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.audit-report h5 {
+  margin: 0 0 10px;
+}
+
+.audit-report-list {
+  display: grid;
+  gap: 10px;
+}
+
+.audit-report-item {
+  padding: 12px;
+  background: #fafafa;
+  border: 1px solid #f0f2f5;
+  border-radius: 6px;
+}
+
+.audit-report-item p {
+  margin-bottom: 0;
+}
+
+.audit-report-steps {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.audit-report-steps li + li {
+  margin-top: 8px;
+}
+
+.audit-report-supplement {
+  white-space: pre-line;
+}
+
+.ticket-description {
+  max-width: 980px;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #1f2937;
+  background: transparent;
+}
+
+.ticket-verification-panel {
+  padding: 8px 12px 12px;
+  background: #fafafa;
+  border-radius: 6px;
+}
+
+@media (max-width: 760px) {
+  .page-head {
+    flex-direction: column;
+  }
+
+  .content {
+    padding: 16px;
+  }
+}

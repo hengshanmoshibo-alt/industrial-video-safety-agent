@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.venv-test/
+*.db
+
+# Node
+node_modules/
+dist/
+
+# Data and model artifacts
+data/
+models/
+logs/
+tmp_evidence_*.jpg
+tmp_evidence_*.png
+.debug/
+
+# Environment
+.env
+
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
