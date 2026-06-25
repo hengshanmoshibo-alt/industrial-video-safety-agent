@@ -1,0 +1,35 @@
+name: Feature request
+description: Suggest an improvement for the safety Agent platform.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What workflow or user need does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the feature and expected behavior.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Vision grounding
+        - Video memory
+        - Agent workflow
+        - Human review
+        - Remediation tickets
+        - Evaluation
+        - MCP tools
+        - Frontend
+        - Documentation
+    validations:
+      required: true

@@ -1,68 +1,254 @@
-# AiCoding 智能客服系统终极版
+# Industrial Video Safety Agent
 
-本项目是本机可完整运行的微服务版智能客服平台，采用 FastAPI 微服务、React 前端、PostgreSQL、Milvus、Redis 和 Docker Compose。
+> Multimodal Agent platform for industrial and warehouse safety inspection.
+> Upload an inspection video, let a vision-language model ground risks with bounding boxes, trigger alerts, route human review, create remediation tickets, and verify the fix.
 
-## 功能
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Docker Compose](https://img.shields.io/badge/Docker%20Compose-ready-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+[![MCP](https://img.shields.io/badge/MCP-tools-7C3AED)](services/safety-mcp-server)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-- 网页访客客服聊天
-- Milvus RAG 知识库问答与来源引用
-- 中文电商客服种子知识库
-- 转人工、坐席接管、人工回复
-- 工单创建与流转
-- 租户、组织、用户、角色、知识治理、模型治理、渠道配置、运营统计和审计日志
-- OpenAI-compatible 大模型接口，未配置时使用本地知识库模板回复
+中文定位：**工业安全巡检多模态 Agent 平台**。  
+It is not a generic chatbot demo. It is a vertical Agent application that turns video evidence into an operational safety workflow.
 
-## 服务清单
+## Why This Project
 
-- `api-gateway`：统一 `/api` 入口。
-- `auth-service`：租户、用户、角色、JWT。
-- `conversation-service`：会话、消息、AI 回复、转人工、坐席接管。
-- `ticket-service`：工单和流转记录。
-- `knowledge-service`：知识文档、版本、审批、发布、Milvus 索引。
-- `ai-orchestrator`：RAG、模型路由、提示词版本、模型调用日志。
-- `channel-service`：网页渠道和企微/微信/飞书/钉钉模拟回调。
-- `analytics-service`：运营指标、质检、系统健康。
-- `worker`：异步任务入口预留。
-- `frontend`：统一管理台、坐席台和治理中心。
+Most safety video demos stop at classification. This project focuses on the full loop:
 
-## 本机启动
-
-Docker：
-
-```bash
-docker compose up --build
+```text
+Video upload
+  -> AgentRun starts
+  -> frame sampling
+  -> video memory
+  -> VLM risk grounding
+  -> bbox evidence
+  -> safety policy decision
+  -> Feishu alert
+  -> human review
+  -> remediation ticket
+  -> post-remediation evidence
+  -> Agent verification
+  -> archive
 ```
 
-访问：
+The design is inspired by strong open-source Agent patterns:
 
-- 前端：`http://localhost:5173`
-- 网关：`http://localhost:8000`
+- [Qwen-Agent](https://github.com/QwenLM/Qwen-Agent): tool use, planning, memory, MCP/RAG direction.
+- [LangGraph](https://github.com/langchain-ai/langgraph): durable execution and human-in-the-loop state.
+- [VisionAgent](https://github.com/landing-ai/vision-agent): vision task tooling and grounding-first workflows.
+- [VideoAgent](https://github.com/YueFan1014/VideoAgent): build video memory first, then reason over memory.
+- [OpenAI Agents SDK](https://github.com/openai/openai-agents-python): tracing, guardrails, handoffs, and tool orchestration patterns.
 
-默认管理员：
+## Core Capabilities
 
-- 用户名：`admin`
-- 密码：`Admin123!`
+- **Multimodal video inspection**: samples key frames from industrial/warehouse videos and analyzes them with an OpenAI-compatible vision model such as `qwen3-vl-plus`.
+- **Risk grounding**: outputs risk label, time range, confidence, Chinese explanation, remediation advice, and bbox coordinates.
+- **Agent observability**: stores `AgentRun`, `AgentStep`, tool latency, intermediate outputs, artifacts, and failure state.
+- **Video memory**: stores structured key-frame memory and risk evidence segments for traceable review.
+- **Safety policy engine**: separates “what the VLM sees” from “what the business should do”.
+- **Human-in-the-loop**: uncertain findings pause the Agent at `waiting_review`; supervisor review resumes the workflow.
+- **Alerting**: high-risk and review-worthy events can trigger signed Feishu bot alerts.
+- **Remediation loop**: creates remediation tickets, accepts post-remediation evidence, and verifies the fix.
+- **Evaluation panel**: tracks processing success, bbox validity, alert success, review confirmation, false positives, and latency.
+- **MCP tools**: exposes `inspect_safety_frame`, `query_video_memory`, and `send_feishu_alert` for external Agent integration.
 
-## 数据策略
+## Product Screens
 
-默认导入自建中文电商客服种子知识库。公开数据集只作为测试、评估和问法扩展，不默认进入生产知识库。
+The safety-only frontend contains:
 
-详见 [docs/data-sources.md](docs/data-sources.md)。
+- Safety Inspection
+- Agent Trace
+- Human Review
+- Remediation Tickets
+- Evaluation Panel
 
-## 终极版验收
+Legacy customer-service modules remain in the codebase, but `docker-compose.safety.yml` starts only the safety inspection platform.
 
-启动完整环境后可运行：
+## Architecture
 
-```bash
-python scripts/verify_ultimate.py
+```mermaid
+flowchart LR
+  U["User uploads video"] --> G["api-gateway"]
+  G --> VAS["video-audit-service"]
+  VAS --> S3["MinIO / local object storage"]
+  VAS --> DB["PostgreSQL"]
+  VAS --> R["Redis queue"]
+  R --> VW["video-worker"]
+  VW --> FF["FFmpeg frame sampler"]
+  VW --> VLM["Qwen3-VL / OpenAI-compatible VLM"]
+  VW --> MEM["VideoMemorySegment"]
+  VW --> POL["SafetyPolicy decision"]
+  POL --> FS["Feishu alert"]
+  POL --> HR["Human review"]
+  POL --> T["ticket-service"]
+  T --> VER["post-remediation verification"]
+  FE["React frontend"] --> G
+  MCP["Safety MCP server"] --> VLM
+  MCP --> VAS
+  MCP --> FS
 ```
 
-该脚本会验证管理员登录、种子知识库导入、Milvus + 关键词混合 RAG、投诉/转人工识别、满意度、质检任务、审计日志和系统健康。
+## Agent Workflow
 
-## 文档
+Each inspection creates one Agent run and a tool-level execution trace:
 
-- [架构说明](docs/architecture.md)
-- [部署说明](docs/deployment.md)
-- [模型治理](docs/model-governance.md)
-- [知识治理](docs/knowledge-governance.md)
-- [API 摘要](docs/api.md)
+| Tool | Purpose |
+| --- | --- |
+| `receive_task` | Create an auditable AgentRun for the uploaded video. |
+| `load_video` | Load original video and metadata. |
+| `sample_video_frames` | Extract key frames and persist frame artifacts. |
+| `inspect_safety_frame` | Call the VLM for risk labels and bbox grounding. |
+| `validate_bbox` | Downgrade unreliable localization to human review. |
+| `merge_risk_events` | Merge adjacent frame-level findings into risk events. |
+| `build_video_memory` | Store frame memory and evidence segments. |
+| `decide_safety_action` | Apply policy: alert, review, ticket, verification. |
+| `write_audit_report` | Generate a concise Chinese inspection report. |
+| `send_feishu_alert` | Send high-risk alert or review reminder. |
+| `recommend_remediation_ticket` | Prepare ticket recommendation for supervisor confirmation. |
+| `verify_remediation` | Evaluate post-remediation evidence. |
+
+## Quick Start
+
+Prerequisites:
+
+- Docker Desktop
+- Git
+- A vision model API key if you want real VLM recognition
+
+Create local env:
+
+```bash
+cp .env.example .env
+```
+
+For Alibaba DashScope / Qwen VL, configure an OpenAI-compatible endpoint in `.env`:
+
+```env
+VISION_ENABLED=true
+VISION_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+VISION_API_KEY=your_key_here
+VISION_MODEL=qwen3-vl-plus
+```
+
+Optional Feishu alert:
+
+```env
+FEISHU_ALERT_ENABLED=true
+FEISHU_WEBHOOK_URL=your_feishu_webhook
+FEISHU_WEBHOOK_SECRET=your_signing_secret
+```
+
+Start the safety platform:
+
+```bash
+docker compose -f docker-compose.safety.yml up -d --build
+```
+
+Open:
+
+```text
+http://localhost:5173
+admin / Admin123!
+```
+
+## Evaluation
+
+Run tests and build:
+
+```bash
+pytest -q
+cd frontend
+npm run build
+```
+
+Run API-level evaluation with public samples:
+
+```bash
+python scripts/download_safety_dataset.py
+python scripts/evaluate_safety_agent.py --mode api --max-samples 24
+```
+
+The frontend Evaluation Panel shows:
+
+- video processing success rate
+- bbox validity rate
+- high-risk alert count
+- Feishu alert success rate
+- human-review confirmation rate
+- false-positive rate
+- average processing latency
+
+## Public Dataset
+
+The project is designed for open safety video samples:
+
+- Hugging Face: [Voxel51/Safe_and_Unsafe_Behaviours](https://huggingface.co/datasets/Voxel51/Safe_and_Unsafe_Behaviours)
+- Mendeley: [Safe and Unsafe Behaviours Dataset](https://data.mendeley.com/datasets/xjmtb22pff/1)
+
+The dataset contains industrial safe/unsafe behavior videos and is suitable for demo, regression evaluation, and optional local classifier training.
+
+## MCP Tools
+
+The lightweight MCP server lives in [services/safety-mcp-server](services/safety-mcp-server).
+
+```bash
+pip install -r services/safety-mcp-server/requirements.txt
+python services/safety-mcp-server/server.py
+```
+
+Tools:
+
+- `inspect_safety_frame`
+- `query_video_memory`
+- `send_feishu_alert`
+
+## API Highlights
+
+| Endpoint | Description |
+| --- | --- |
+| `POST /api/video-audits` | Upload inspection video. |
+| `GET /api/video-audits/{id}` | Detail with findings, evidence, memory, Agent run, reviews, alerts. |
+| `GET /api/video-audits/{id}/memory` | Query video memory segments. |
+| `GET /api/video-audits/{id}/agent-explanation` | Explain what the Agent saw and why it acted. |
+| `POST /api/video-audits/{id}/review` | Submit human-review decision. |
+| `POST /api/video-audits/{id}/resume` | Resume Agent after review. |
+| `POST /api/video-audits/{id}/tickets` | Create remediation ticket after confirmation. |
+| `POST /api/tickets/{id}/verification` | Upload post-remediation evidence. |
+| `GET /api/video-audits/metrics/evaluation` | Evaluation and observability metrics. |
+| `GET /api/safety-tools` | List internal Agent tools. |
+
+## Roadmap
+
+See [ROADMAP.md](ROADMAP.md).
+
+Near-term high-impact items:
+
+- real screenshot/GIF demo assets for the README
+- LangGraph-style explicit state graph
+- semantic retrieval over video memory
+- bbox IoU evaluation on labeled samples
+- MCP client demo with a second Agent calling this platform
+- GitHub Actions badges after CI is enabled
+
+## Safety Notice
+
+This project is an inspection assistant. It is not a certified safety system. High-risk, critical, and uncertain results must be reviewed by a qualified safety supervisor using original video and site context.
+
+## Contributing
+
+Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Good first areas:
+
+- new safety policies
+- better VLM prompts
+- evaluation scripts
+- evidence visualization
+- MCP clients
+- frontend polish
+
+## License
+
+MIT License. See [LICENSE](LICENSE).
