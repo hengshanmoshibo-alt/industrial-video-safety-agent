@@ -143,7 +143,7 @@ FEISHU_WEBHOOK_SECRET=your_signing_secret
 Start the safety platform:
 
 ```bash
-docker compose -f docker-compose.safety.yml up -d --build
+docker compose -p aicoding -f docker-compose.safety.yml up -d --build
 ```
 
 Open:
@@ -152,6 +152,29 @@ Open:
 http://localhost:5173
 admin / Admin123!
 ```
+
+### Seed A Deterministic Demo
+
+To see the full product without a VLM key, seed one complete inspection:
+
+```bash
+docker compose -p aicoding -f docker-compose.safety.yml exec video-audit-service \
+  python /app/scripts/seed_demo_safety_agent.py
+```
+
+This creates one high-risk walkway-obstruction audit with bbox evidence, video memory, Agent steps, a seeded Feishu alert event, a Chinese report, and a ticket recommendation. The remediation ticket is intentionally not created by default so you can demonstrate the click-to-create workflow.
+
+See [docs/demo.md](docs/demo.md) for the live-demo checklist.
+
+### API Client Example
+
+After seeding the demo, run:
+
+```bash
+python examples/api_client_demo.py
+```
+
+It logs in, prints evaluation metrics, fetches the latest audit explanation, and queries video memory segments with bbox evidence.
 
 ## Evaluation
 
@@ -169,6 +192,8 @@ Run API-level evaluation with public samples:
 python scripts/download_safety_dataset.py
 python scripts/evaluate_safety_agent.py --mode api --max-samples 24
 ```
+
+See [docs/benchmark.md](docs/benchmark.md) for smoke benchmark and public dataset evaluation guidance.
 
 The frontend Evaluation Panel shows:
 
@@ -203,6 +228,8 @@ Tools:
 - `inspect_safety_frame`
 - `query_video_memory`
 - `send_feishu_alert`
+
+For a lightweight API integration example, see [examples](examples).
 
 ## API Highlights
 

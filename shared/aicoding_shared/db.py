@@ -67,6 +67,29 @@ def _ensure_compat_columns() -> None:
                 connection.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {type_sql}{default_clause}"))
 
 
+def _ensure_compat_enums() -> None:
+    """Add enum values introduced after the original demo schema was created."""
+    if engine.dialect.name != "postgresql":
+        return
+    enum_values: dict[str, list[str]] = {
+        "agentrunstatus": ["running", "waiting_review", "waiting_remediation", "completed", "failed"],
+        "videorisklevel": ["low", "medium", "high", "critical", "needs_review"],
+        "videoauditstatus": ["queued", "processing", "completed", "needs_review", "failed"],
+        "ticketverificationstatus": ["passed", "failed", "needs_review"],
+        "videoauditreviewdecision": ["confirmed_violation", "false_positive", "needs_more_evidence"],
+    }
+    with engine.begin() as connection:
+        for enum_name, values in enum_values.items():
+            exists = connection.execute(
+                text("SELECT 1 FROM pg_type WHERE typname = :enum_name"),
+                {"enum_name": enum_name},
+            ).first()
+            if exists is None:
+                continue
+            for value in values:
+                connection.execute(text(f"ALTER TYPE {enum_name} ADD VALUE IF NOT EXISTS '{value}'"))
+
+
 def init_db() -> None:
     from aicoding_shared import models  # noqa: F401
 
@@ -74,6 +97,7 @@ def init_db() -> None:
     for _ in range(30):
         try:
             SQLModel.metadata.create_all(engine)
+            _ensure_compat_enums()
             _ensure_compat_columns()
             return
         except Exception as exc:

@@ -77,10 +77,17 @@ The next release should be `v1.1-demo-polish`:
 
 - README screenshots
 - demo GIF
-- sample seed command
+- sample seed command: done via `scripts/seed_demo_safety_agent.py`
+- API client example: done via `examples/api_client_demo.py`
 - CI badge after first GitHub Actions run
 - benchmark report from 24 public samples
-- MCP client demo
+- MCP client demo that calls `services/safety-mcp-server`
+
+## Current Demo Assets
+
+- [Demo guide](demo.md)
+- [Benchmark guide](benchmark.md)
+- [API client example](../examples/api_client_demo.py)
 
 ## Messaging
 
