@@ -25,3 +25,9 @@ Run:
 ```bash
 python services/safety-mcp-server/server.py
 ```
+
+Client examples:
+
+- [examples/mcp_client_config.json](../../examples/mcp_client_config.json)
+- [examples/mcp_stdio_client_demo.py](../../examples/mcp_stdio_client_demo.py)
+- [docs/mcp-client-demo.md](../../docs/mcp-client-demo.md)

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "industrial-safety-agent": {
+      "command": "python",
+      "args": ["services/safety-mcp-server/server.py"],
+      "env": {
+        "SAFETY_AGENT_API_BASE": "http://localhost:8000/api",
+        "SAFETY_AGENT_TOKEN": "paste-jwt-token-here",
+        "VISION_BASE_URL": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "VISION_API_KEY": "paste-vision-key-here",
+        "VISION_MODEL": "qwen3-vl-plus",
+        "FEISHU_WEBHOOK_URL": "paste-feishu-webhook-here",
+        "FEISHU_WEBHOOK_SECRET": "paste-feishu-signing-secret-here"
+      }
+    }
+  }
+}

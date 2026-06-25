@@ -1,0 +1,31 @@
+{
+  "benchmark_type": "deterministic_smoke_demo",
+  "scope": "workflow_integrity",
+  "dataset": "seeded_demo_safety_agent",
+  "model": "seeded_or_qwen3-vl-plus",
+  "metrics": {
+    "total_videos": 1,
+    "processing_success_rate": 1.0,
+    "bbox_validity_rate": 1.0,
+    "high_risk_alerts": 1,
+    "feishu_alert_success_rate": 1.0,
+    "human_review_required": 0,
+    "remediation_tickets_created_by_default": 0,
+    "post_remediation_verifications_by_default": 0
+  },
+  "expected_artifacts": [
+    "VideoAudit",
+    "VideoAuditFinding",
+    "VideoAuditEvidence",
+    "VideoAuditReport",
+    "VideoAuditAgentRun",
+    "VideoAuditAgentStep",
+    "VideoMemorySegment",
+    "VideoAuditAlertEvent",
+    "ticket_recommendation"
+  ],
+  "notes": [
+    "This file is a reproducible smoke benchmark contract, not a model-quality benchmark.",
+    "Use scripts/evaluate_safety_agent.py with public samples for model-quality metrics."
+  ]
+}

@@ -7,6 +7,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![Docker Compose](https://img.shields.io/badge/Docker%20Compose-ready-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+[![CI](https://github.com/hengshanmoshibo-alt/industrial-video-safety-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/hengshanmoshibo-alt/industrial-video-safety-agent/actions/workflows/ci.yml)
 [![MCP](https://img.shields.io/badge/MCP-tools-7C3AED)](services/safety-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -65,6 +66,10 @@ The safety-only frontend contains:
 - Evaluation Panel
 
 Legacy customer-service modules remain in the codebase, but `docker-compose.safety.yml` starts only the safety inspection platform.
+
+## Demo Flow
+
+![Industrial safety Agent demo flow](docs/assets/demo/safety-agent-demo.gif)
 
 ## Screenshots
 
@@ -190,6 +195,16 @@ python examples/api_client_demo.py
 
 It logs in, prints evaluation metrics, fetches the latest audit explanation, and queries video memory segments with bbox evidence.
 
+### MCP Client Example
+
+Configure an MCP client with [examples/mcp_client_config.json](examples/mcp_client_config.json), or run the stdio protocol demo:
+
+```bash
+python examples/mcp_stdio_client_demo.py --audit-id 1 --token <jwt-token>
+```
+
+See [docs/mcp-client-demo.md](docs/mcp-client-demo.md) for the full flow.
+
 ## Evaluation
 
 Run tests and build:
@@ -208,6 +223,8 @@ python scripts/evaluate_safety_agent.py --mode api --max-samples 24
 ```
 
 See [docs/benchmark.md](docs/benchmark.md) for smoke benchmark and public dataset evaluation guidance.
+
+A deterministic smoke benchmark artifact is included at [docs/assets/benchmarks/smoke-demo-metrics.json](docs/assets/benchmarks/smoke-demo-metrics.json).
 
 The frontend Evaluation Panel shows:
 
@@ -266,12 +283,10 @@ See [ROADMAP.md](ROADMAP.md).
 
 Near-term high-impact items:
 
-- real screenshot/GIF demo assets for the README
 - LangGraph-style explicit state graph
 - semantic retrieval over video memory
 - bbox IoU evaluation on labeled samples
-- MCP client demo with a second Agent calling this platform
-- GitHub Actions badges after CI is enabled
+- public release package with benchmark attachments
 
 ## Safety Notice
 

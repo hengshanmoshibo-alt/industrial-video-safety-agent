@@ -35,6 +35,9 @@ Expected smoke properties:
 
 The smoke benchmark is not a model-quality benchmark. It verifies product and Agent workflow integrity.
 
+A committed smoke benchmark contract is available at
+[docs/assets/benchmarks/smoke-demo-metrics.json](assets/benchmarks/smoke-demo-metrics.json).
+
 ## Public Dataset Benchmark
 
 Download public safety videos:
@@ -75,3 +78,6 @@ For credible open-source releases, attach:
 ## Current High-Star Gap
 
 The repository has the Agent workflow and metrics plumbing, but it still needs a public benchmark artifact generated from a fixed dataset subset and shown as charts in the README. That is the next credibility milestone.
+The current repository includes a smoke benchmark artifact; the next credibility
+milestone is a public dataset benchmark artifact with fixed sample ids, model
+configuration, and false-positive / false-negative examples.
