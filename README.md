@@ -66,6 +66,20 @@ The safety-only frontend contains:
 
 Legacy customer-service modules remain in the codebase, but `docker-compose.safety.yml` starts only the safety inspection platform.
 
+## Screenshots
+
+Safety dashboard with Agent metrics, high-risk alerts, human review count, and remediation status:
+
+![Safety dashboard](docs/assets/screenshots/01-safety-dashboard.png)
+
+Risk grounding evidence with bbox overlays and Chinese evidence captions:
+
+![Risk grounding evidence](docs/assets/screenshots/02-bbox-evidence.png)
+
+Agent execution trace showing tool calls, latency, decisions, and intermediate reasoning:
+
+![Agent trace detail](docs/assets/screenshots/04-agent-trace-detail.png)
+
 ## Architecture
 
 ```mermaid
