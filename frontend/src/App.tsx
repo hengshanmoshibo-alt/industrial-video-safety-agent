@@ -5,17 +5,18 @@ import {
   FileDoneOutlined,
   SafetyCertificateOutlined
 } from "@ant-design/icons";
-import { Layout, Menu, Typography } from "antd";
-import { useEffect, useMemo, useState } from "react";
-import SafetyInspection from "./pages/SafetyInspection";
-import Tickets from "./pages/Tickets";
-import AgentTrace from "./pages/AgentTrace";
-import HumanReview from "./pages/HumanReview";
-import EvaluationPanel from "./pages/EvaluationPanel";
+import { Layout, Menu, Spin, Typography } from "antd";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 
 const { Header, Sider, Content } = Layout;
 
 type PageKey = "safety" | "agent_trace" | "review" | "tickets" | "evaluation";
+
+const SafetyInspection = lazy(() => import("./pages/SafetyInspection"));
+const AgentTrace = lazy(() => import("./pages/AgentTrace"));
+const HumanReview = lazy(() => import("./pages/HumanReview"));
+const Tickets = lazy(() => import("./pages/Tickets"));
+const EvaluationPanel = lazy(() => import("./pages/EvaluationPanel"));
 
 export default function App() {
   const [page, setPage] = useState<PageKey>("safety");
@@ -81,7 +82,9 @@ export default function App() {
           <Typography.Text strong>工业安全巡检与整改闭环平台</Typography.Text>
           <Typography.Text type="secondary">默认账号 admin / Admin123!</Typography.Text>
         </Header>
-        <Content className="content">{pageNode}</Content>
+        <Content className="content">
+          <Suspense fallback={<Spin className="page-loading" />}>{pageNode}</Suspense>
+        </Content>
       </Layout>
     </Layout>
   );

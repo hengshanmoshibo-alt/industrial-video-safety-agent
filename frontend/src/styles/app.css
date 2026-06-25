@@ -49,6 +49,12 @@ body {
   padding: 24px;
 }
 
+.page-loading {
+  display: grid;
+  min-height: 360px;
+  place-items: center;
+}
+
 .page-head {
   display: flex;
   justify-content: space-between;
