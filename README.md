@@ -136,10 +136,11 @@ Prerequisites:
 - Git
 - A vision model API key if you want real VLM recognition
 
-Create local env:
+Check your local environment:
 
 ```bash
-cp .env.example .env
+python scripts/dev.py doctor
+python scripts/dev.py init-env
 ```
 
 For Alibaba DashScope / Qwen VL, configure an OpenAI-compatible endpoint in `.env`:
@@ -162,7 +163,7 @@ FEISHU_WEBHOOK_SECRET=your_signing_secret
 Start the safety platform:
 
 ```bash
-docker compose -p aicoding -f docker-compose.safety.yml up -d --build
+python scripts/dev.py up
 ```
 
 Open:
@@ -177,20 +178,20 @@ admin / Admin123!
 To see the full product without a VLM key, seed one complete inspection:
 
 ```bash
-docker compose -p aicoding -f docker-compose.safety.yml exec video-audit-service \
-  python /app/scripts/seed_demo_safety_agent.py
+python scripts/dev.py seed
 ```
 
 This creates one high-risk walkway-obstruction audit with bbox evidence, video memory, Agent steps, a seeded Feishu alert event, a Chinese report, and a ticket recommendation. The remediation ticket is intentionally not created by default so you can demonstrate the click-to-create workflow.
 
 See [docs/demo.md](docs/demo.md) for the live-demo checklist.
+See [docs/developer-commands.md](docs/developer-commands.md) for all local command shortcuts.
 
 ### API Client Example
 
 After seeding the demo, run:
 
 ```bash
-python examples/api_client_demo.py
+python scripts/dev.py api-demo
 ```
 
 It logs in, prints evaluation metrics, fetches the latest audit explanation, and queries video memory segments with bbox evidence.
@@ -200,7 +201,7 @@ It logs in, prints evaluation metrics, fetches the latest audit explanation, and
 Configure an MCP client with [examples/mcp_client_config.json](examples/mcp_client_config.json), or run the stdio protocol demo:
 
 ```bash
-python examples/mcp_stdio_client_demo.py --audit-id 1 --token <jwt-token>
+python scripts/dev.py mcp-tools
 ```
 
 See [docs/mcp-client-demo.md](docs/mcp-client-demo.md) for the full flow.
@@ -210,9 +211,7 @@ See [docs/mcp-client-demo.md](docs/mcp-client-demo.md) for the full flow.
 Run tests and build:
 
 ```bash
-pytest -q
-cd frontend
-npm run build
+python scripts/dev.py verify
 ```
 
 Run API-level evaluation with public samples:

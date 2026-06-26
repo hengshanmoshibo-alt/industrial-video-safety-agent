@@ -30,9 +30,8 @@ The required runtime values are:
 Start the safety platform and seed one demo audit:
 
 ```bash
-docker compose -p aicoding -f docker-compose.safety.yml up -d --build
-docker compose -p aicoding -f docker-compose.safety.yml exec video-audit-service \
-  python /app/scripts/seed_demo_safety_agent.py
+python scripts/dev.py up
+python scripts/dev.py seed
 ```
 
 Log in and copy the JWT token, or use the API client demo to inspect the latest

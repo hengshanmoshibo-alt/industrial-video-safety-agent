@@ -10,9 +10,8 @@ This project exposes two evaluation layers:
 Use the deterministic seeded demo:
 
 ```bash
-docker compose -p aicoding -f docker-compose.safety.yml up -d --build
-docker compose -p aicoding -f docker-compose.safety.yml exec video-audit-service \
-  python /app/scripts/seed_demo_safety_agent.py
+python scripts/dev.py up
+python scripts/dev.py seed
 ```
 
 Then open the Evaluation Panel or call:

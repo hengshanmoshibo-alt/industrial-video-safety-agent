@@ -7,15 +7,14 @@ Small integration examples for the Industrial Video Safety Agent.
 After starting the stack and seeding the demo:
 
 ```bash
-docker compose -p aicoding -f docker-compose.safety.yml up -d --build
-docker compose -p aicoding -f docker-compose.safety.yml exec video-audit-service \
-  python /app/scripts/seed_demo_safety_agent.py
+python scripts/dev.py up
+python scripts/dev.py seed
 ```
 
 Run:
 
 ```bash
-python examples/api_client_demo.py
+python scripts/dev.py api-demo
 ```
 
 The script logs in, prints evaluation metrics, fetches the latest audit, and prints the Agent explanation plus video memory summary.

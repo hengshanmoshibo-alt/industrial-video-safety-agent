@@ -7,14 +7,13 @@ This guide is optimized for reviewers who clone the repository and want to see t
 Start the safety-only stack:
 
 ```bash
-docker compose -p aicoding -f docker-compose.safety.yml up -d --build
+python scripts/dev.py up
 ```
 
 Seed one deterministic inspection:
 
 ```bash
-docker compose -p aicoding -f docker-compose.safety.yml exec video-audit-service \
-  python /app/scripts/seed_demo_safety_agent.py
+python scripts/dev.py seed
 ```
 
 Open the product:
@@ -35,8 +34,7 @@ Expected result:
 To seed the same demo with a ticket already created:
 
 ```bash
-docker compose -p aicoding -f docker-compose.safety.yml exec video-audit-service \
-  python /app/scripts/seed_demo_safety_agent.py --with-ticket
+python scripts/dev.py seed --with-ticket
 ```
 
 ## Real VLM Demo
