@@ -17,3 +17,13 @@ def test_dev_script_help_lists_core_commands():
     assert "verify" in result.stdout
     assert "seed" in result.stdout
     assert "docs-check" in result.stdout
+    assert "workflow-check" in result.stdout
+
+
+def test_workflow_spec_check_passes():
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "check_workflow_spec.py")],
+        check=True,
+        capture_output=True,
+        text=True,
+    )

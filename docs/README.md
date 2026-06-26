@@ -17,6 +17,7 @@ Safety Agent.
 | Document | Purpose |
 | --- | --- |
 | [Architecture](architecture.md) | Service layout and request flow. |
+| [Agent State Graph](agent-state-graph.md) | Machine-readable workflow spec and state diagram. |
 | [Video Safety Agent](video-safety-agent.md) | Product and technical design for the video Agent. |
 | [API](api.md) | Main API surface. |
 | [MCP Client Demo](mcp-client-demo.md) | External Agent integration through MCP tools. |
@@ -39,4 +40,3 @@ Safety Agent.
 | [ADR-0002](adr/0002-video-memory-first.md) | Build video memory before final risk reasoning. |
 | [ADR-0003](adr/0003-policy-decision-center.md) | Separate VLM perception from business safety decisions. |
 | [ADR-0004](adr/0004-mcp-as-extension.md) | Expose MCP as an extension layer, not the core runtime. |
-

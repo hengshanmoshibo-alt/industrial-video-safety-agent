@@ -123,6 +123,10 @@ flowchart LR
 
 Each inspection creates one Agent run and a tool-level execution trace:
 
+The machine-readable workflow contract lives in
+[config/safety_agent_workflow.json](config/safety_agent_workflow.json), with a
+rendered explanation in [docs/agent-state-graph.md](docs/agent-state-graph.md).
+
 | Tool | Purpose |
 | --- | --- |
 | `receive_task` | Create an auditable AgentRun for the uploaded video. |

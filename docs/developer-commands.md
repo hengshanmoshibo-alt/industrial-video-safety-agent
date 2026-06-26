@@ -32,6 +32,7 @@ Open `http://localhost:5173` and log in with `admin / Admin123!`.
 | `frontend-build` | Build the React frontend. |
 | `compose-check` | Validate `docker-compose.safety.yml`. |
 | `docs-check` | Validate local Markdown links. |
+| `workflow-check` | Validate the safety Agent workflow spec against code and docs. |
 | `verify` | Run tests, frontend build, and compose validation. |
 | `mcp-tools` | List MCP tools through the stdio client. |
 | `api-demo` | Run the API client example against localhost. |

@@ -31,7 +31,8 @@ The goal is to evolve this project from a strong vertical demo into a high-quali
 
 ## v3: Stronger Agent Architecture
 
-- [ ] explicit state graph diagram for Agent workflow
+- [x] explicit state graph diagram for Agent workflow
+- [x] machine-readable workflow spec with validation
 - [ ] durable resume from every state
 - [ ] branch replay for failed tools
 - [ ] tool-call retry policy and idempotency keys

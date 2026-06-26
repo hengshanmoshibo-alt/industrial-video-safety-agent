@@ -1,0 +1,176 @@
+{
+  "name": "industrial-video-safety-agent",
+  "version": "1.0.0",
+  "goal": "video input -> video memory -> vision grounding -> policy decision -> alert/review/ticket -> remediation verification",
+  "run_statuses": [
+    "running",
+    "waiting_review",
+    "waiting_remediation",
+    "completed",
+    "failed"
+  ],
+  "tools": [
+    {
+      "order": 1,
+      "name": "receive_task",
+      "kind": "internal",
+      "stage": "intake",
+      "why": "Create a persisted AgentRun so every inspection has an auditable execution trace.",
+      "inputs": ["audit_id", "file_name", "object_key"],
+      "outputs": ["agent_run_id"],
+      "artifacts": ["VideoAuditAgentRun"]
+    },
+    {
+      "order": 2,
+      "name": "load_video",
+      "kind": "internal",
+      "stage": "video_loading",
+      "why": "Load source bytes and metadata before frame sampling and timeline reasoning.",
+      "inputs": ["object_key"],
+      "outputs": ["duration_ms", "local_video_path"],
+      "artifacts": ["VideoAudit.duration_ms"]
+    },
+    {
+      "order": 3,
+      "name": "sample_video_frames",
+      "kind": "internal",
+      "stage": "video_memory",
+      "why": "Sample key frames to reduce VLM cost while preserving an inspectable timeline.",
+      "inputs": ["local_video_path", "frame_interval_seconds"],
+      "outputs": ["frame_paths", "raw_frame_artifacts"],
+      "artifacts": ["raw_frames"]
+    },
+    {
+      "order": 4,
+      "name": "inspect_safety_frame",
+      "kind": "vlm_tool",
+      "stage": "vision_grounding",
+      "why": "Call an OpenAI-compatible vision model for risk labels, evidence text, and bbox grounding.",
+      "inputs": ["frame_paths", "vision_prompt", "vision_model"],
+      "outputs": ["frame_level_findings", "analysis_meta"],
+      "artifacts": ["vlm_raw_output"]
+    },
+    {
+      "order": 5,
+      "name": "validate_bbox",
+      "kind": "internal",
+      "stage": "evidence_validation",
+      "why": "Validate localization quality before evidence screenshots and human review.",
+      "inputs": ["frame_level_findings"],
+      "outputs": ["bbox_quality_summary", "needs_review_count"],
+      "artifacts": ["bbox"]
+    },
+    {
+      "order": 6,
+      "name": "merge_risk_events",
+      "kind": "internal",
+      "stage": "event_reasoning",
+      "why": "Merge adjacent same-label findings so one hazard is not reported repeatedly.",
+      "inputs": ["frame_level_findings", "duration_ms"],
+      "outputs": ["risk_events"],
+      "artifacts": ["VideoAuditFinding"]
+    },
+    {
+      "order": 7,
+      "name": "build_video_memory",
+      "kind": "internal",
+      "stage": "video_memory",
+      "why": "Persist searchable timeline memory for explanation, review, and future retrieval.",
+      "inputs": ["frames", "risk_events", "analysis_meta"],
+      "outputs": ["memory_segments"],
+      "artifacts": ["VideoMemorySegment"]
+    },
+    {
+      "order": 8,
+      "name": "decide_safety_action",
+      "kind": "policy_tool",
+      "stage": "decision",
+      "why": "Separate VLM perception from business action policy for alert, review, ticket, and verification.",
+      "inputs": ["overall_risk", "findings", "safety_policies"],
+      "outputs": ["agent_decision"],
+      "artifacts": ["SafetyPolicy", "VideoAuditAgentRun.decision"]
+    },
+    {
+      "order": 9,
+      "name": "write_audit_report",
+      "kind": "llm_or_template_tool",
+      "stage": "reporting",
+      "why": "Turn evidence and policy decisions into a concise Chinese inspection report.",
+      "inputs": ["audit", "findings", "agent_decision", "analysis_meta"],
+      "outputs": ["report_json"],
+      "artifacts": ["VideoAuditReport"]
+    },
+    {
+      "order": 10,
+      "name": "send_feishu_alert",
+      "kind": "external_tool",
+      "stage": "alerting",
+      "why": "Notify safety supervisors for high-risk or review-worthy events.",
+      "inputs": ["agent_decision", "alert_policy", "findings"],
+      "outputs": ["alert_status"],
+      "artifacts": ["VideoAuditAlertEvent"]
+    },
+    {
+      "order": 11,
+      "name": "recommend_remediation_ticket",
+      "kind": "internal",
+      "stage": "remediation",
+      "why": "Prepare remediation work without automatically dispatching tickets from uncertain model output.",
+      "inputs": ["agent_decision", "findings", "evidence"],
+      "outputs": ["ticket_recommendation"],
+      "artifacts": ["Ticket recommendation"]
+    },
+    {
+      "order": 12,
+      "name": "verify_remediation",
+      "kind": "internal_or_vlm_tool",
+      "stage": "verification",
+      "why": "Evaluate post-remediation evidence and decide whether the loop can close.",
+      "inputs": ["ticket_id", "audit_id", "verification_evidence"],
+      "outputs": ["verification_status", "verification_reason"],
+      "artifacts": ["TicketVerification"]
+    }
+  ],
+  "transitions": [
+    {"from": "receive_task", "to": "load_video", "condition": "task accepted"},
+    {"from": "load_video", "to": "sample_video_frames", "condition": "video loaded"},
+    {"from": "sample_video_frames", "to": "inspect_safety_frame", "condition": "frames extracted"},
+    {"from": "inspect_safety_frame", "to": "validate_bbox", "condition": "frame findings returned"},
+    {"from": "validate_bbox", "to": "merge_risk_events", "condition": "bbox validation completed"},
+    {"from": "merge_risk_events", "to": "build_video_memory", "condition": "risk events merged"},
+    {"from": "build_video_memory", "to": "decide_safety_action", "condition": "memory persisted"},
+    {"from": "decide_safety_action", "to": "write_audit_report", "condition": "decision created"},
+    {"from": "write_audit_report", "to": "send_feishu_alert", "condition": "report persisted"},
+    {"from": "send_feishu_alert", "to": "recommend_remediation_ticket", "condition": "alert attempted or skipped"},
+    {"from": "recommend_remediation_ticket", "to": "verify_remediation", "condition": "ticket created and evidence uploaded"}
+  ],
+  "pause_points": [
+    {
+      "status": "waiting_review",
+      "trigger": "agent_decision.needs_human_review == true",
+      "resume_endpoint": "POST /api/video-audits/{id}/resume",
+      "review_endpoint": "POST /api/video-audits/{id}/review"
+    },
+    {
+      "status": "waiting_remediation",
+      "trigger": "agent_decision.recommend_ticket == true",
+      "resume_endpoint": "POST /api/tickets/{id}/verification",
+      "review_endpoint": "POST /api/video-audits/{id}/tickets"
+    }
+  ],
+  "terminal_states": [
+    {
+      "status": "completed",
+      "condition": "no ticket is required or verification passed"
+    },
+    {
+      "status": "failed",
+      "condition": "unhandled tool or infrastructure error"
+    }
+  ],
+  "mcp_exposed_tools": [
+    "inspect_safety_frame",
+    "query_video_memory",
+    "send_feishu_alert"
+  ]
+}
