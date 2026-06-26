@@ -97,27 +97,7 @@ Agent 执行轨迹：展示工具调用、耗时、决策和中间步骤。
 
 ## 架构
 
-```mermaid
-flowchart LR
-  U["用户上传视频"] --> G["api-gateway"]
-  G --> VAS["video-audit-service"]
-  VAS --> S3["MinIO / 本地对象存储"]
-  VAS --> DB["PostgreSQL"]
-  VAS --> R["Redis queue"]
-  R --> VW["video-worker"]
-  VW --> FF["FFmpeg 抽帧"]
-  VW --> VLM["Qwen3-VL / OpenAI-compatible VLM"]
-  VW --> MEM["VideoMemorySegment"]
-  VW --> POL["SafetyPolicy 决策"]
-  POL --> FS["飞书告警"]
-  POL --> HR["人工复核"]
-  POL --> T["ticket-service"]
-  T --> VER["整改后复检"]
-  FE["React 前端"] --> G
-  MCP["Safety MCP server"] --> VLM
-  MCP --> VAS
-  MCP --> FS
-```
+![工业安全巡检 Agent 架构](docs/assets/architecture/safety-agent-architecture.zh-CN.svg)
 
 ## Agent 工作流
 

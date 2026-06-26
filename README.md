@@ -101,27 +101,7 @@ Agent execution trace showing tool calls, latency, decisions, and intermediate r
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  U["User uploads video"] --> G["api-gateway"]
-  G --> VAS["video-audit-service"]
-  VAS --> S3["MinIO / local object storage"]
-  VAS --> DB["PostgreSQL"]
-  VAS --> R["Redis queue"]
-  R --> VW["video-worker"]
-  VW --> FF["FFmpeg frame sampler"]
-  VW --> VLM["Qwen3-VL / OpenAI-compatible VLM"]
-  VW --> MEM["VideoMemorySegment"]
-  VW --> POL["SafetyPolicy decision"]
-  POL --> FS["Feishu alert"]
-  POL --> HR["Human review"]
-  POL --> T["ticket-service"]
-  T --> VER["post-remediation verification"]
-  FE["React frontend"] --> G
-  MCP["Safety MCP server"] --> VLM
-  MCP --> VAS
-  MCP --> FS
-```
+![Industrial Video Safety Agent architecture](docs/assets/architecture/safety-agent-architecture.svg)
 
 ## Agent Workflow
 
