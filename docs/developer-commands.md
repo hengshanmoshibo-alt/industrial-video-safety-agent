@@ -33,6 +33,7 @@ Open `http://localhost:5173` and log in with `admin / Admin123!`.
 | `compose-check` | Validate `docker-compose.safety.yml`. |
 | `docs-check` | Validate local Markdown links. |
 | `workflow-check` | Validate the safety Agent workflow spec against code and docs. |
+| `prompt-check` | Validate the VLM prompt and output schema contract. |
 | `verify` | Run tests, frontend build, and compose validation. |
 | `mcp-tools` | List MCP tools through the stdio client. |
 | `api-demo` | Run the API client example against localhost. |

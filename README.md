@@ -19,6 +19,7 @@ It is not a generic chatbot demo. It is a vertical Agent application that turns 
 - **Agent-first workflow**: every inspection creates persisted `AgentRun` and `AgentStep` records, not just a final prediction.
 - **Video memory**: key frames become searchable `VideoMemorySegment` records with objects, bbox, evidence text, and raw VLM output.
 - **Grounded evidence**: risk findings include time range, Chinese explanation, remediation advice, confidence, and bbox overlays.
+- **Prompt contract**: the shared VLM prompt and JSON schema are public in [prompts](prompts), and validated by `python scripts/dev.py prompt-check`.
 - **Policy-driven actions**: VLM perception is separated from alert/review/ticket decisions through `SafetyPolicy`.
 - **Human-in-the-loop**: uncertain results pause for supervisor review instead of becoming automatic violation conclusions.
 - **Operational loop**: Feishu alert, remediation ticket, post-remediation evidence, and Agent verification are part of the flow.
@@ -220,6 +221,7 @@ python scripts/dev.py mcp-tools
 ```
 
 See [docs/mcp-client-demo.md](docs/mcp-client-demo.md) for the full flow.
+The shared VLM prompt contract is documented in [prompts](prompts).
 
 ## Evaluation
 

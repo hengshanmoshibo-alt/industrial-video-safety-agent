@@ -167,10 +167,15 @@ def workflow_check(_: argparse.Namespace) -> None:
     run([project_python(), "scripts/check_workflow_spec.py"])
 
 
+def prompt_check(_: argparse.Namespace) -> None:
+    run([project_python(), "scripts/check_prompt_contract.py"])
+
+
 def verify(_: argparse.Namespace) -> None:
     ensure_env()
     run([project_python(), "scripts/check_docs.py"])
     run([project_python(), "scripts/check_workflow_spec.py"])
+    run([project_python(), "scripts/check_prompt_contract.py"])
     run([project_python(), "-m", "pytest", "-q"])
     run(["npm", "run", "build"], cwd=FRONTEND)
     run([*COMPOSE, "config", "--quiet"])
@@ -199,6 +204,7 @@ def build_parser() -> argparse.ArgumentParser:
         "compose-check": (compose_check, "Validate docker-compose.safety.yml."),
         "docs-check": (docs_check, "Validate local Markdown links."),
         "workflow-check": (workflow_check, "Validate the safety Agent workflow spec."),
+        "prompt-check": (prompt_check, "Validate the VLM prompt and output schema contract."),
         "verify": (verify, "Run tests, frontend build, and compose validation."),
         "mcp-tools": (mcp_tools, "List MCP tools through the stdio client."),
         "api-demo": (api_demo, "Run the API client demo against localhost."),

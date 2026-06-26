@@ -73,11 +73,18 @@ RISK_LEVEL_TEXT = {
 }
 
 
-SAFETY_SKILL_PATH = Path(__file__).resolve().parent / "prompts" / "safety_inspection_skill.md"
+SAFETY_SKILL_CANDIDATES = [
+    Path(__file__).resolve().parents[2] / "prompts" / "safety_inspection_skill.md",
+    Path(__file__).resolve().parents[3] / "prompts" / "safety_inspection_skill.md",
+    Path(__file__).resolve().parent / "prompts" / "safety_inspection_skill.md",
+]
 
 
 def load_safety_skill_prompt() -> str:
-    return SAFETY_SKILL_PATH.read_text(encoding="utf-8")
+    for path in SAFETY_SKILL_CANDIDATES:
+        if path.exists():
+            return path.read_text(encoding="utf-8")
+    raise FileNotFoundError("safety_inspection_skill.md was not found")
 
 
 class VisionSafetyAnalyzer:

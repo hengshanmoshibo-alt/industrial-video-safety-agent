@@ -15,6 +15,12 @@ from mcp.server.fastmcp import FastMCP
 mcp = FastMCP("industrial-safety-agent")
 
 
+PROMPT_CANDIDATES = [
+    Path(__file__).resolve().parents[2] / "prompts" / "safety_inspection_skill.md",
+    Path(__file__).resolve().parent / "prompts" / "safety_inspection_skill.md",
+]
+
+
 def _env(name: str, default: str = "") -> str:
     return os.getenv(name, default).strip()
 
@@ -33,6 +39,17 @@ def _feishu_sign(secret: str, timestamp: str) -> str:
     return base64.b64encode(digest).decode("utf-8")
 
 
+def _load_safety_prompt() -> str:
+    for path in PROMPT_CANDIDATES:
+        if path.exists():
+            return path.read_text(encoding="utf-8")
+    return (
+        "你是工业安全巡检视觉工具。只依据图片判断安全风险，输出简体中文 JSON。"
+        "如果发现风险，请返回 findings 数组，每项包含 label、risk_level、confidence、bbox、reason、recommendation、evidence_caption。"
+        "bbox 使用 [x_min,y_min,x_max,y_max]，坐标归一化到 0-1000。"
+    )
+
+
 @mcp.tool()
 async def inspect_safety_frame(image_path: str, instruction: str = "") -> dict[str, Any]:
     """Inspect one industrial safety frame and return JSON-like risk findings."""
@@ -41,11 +58,7 @@ async def inspect_safety_frame(image_path: str, instruction: str = "") -> dict[s
     model = _env("VISION_MODEL") or _env("LLM_MODEL", "qwen3-vl-plus")
     if not (base_url and api_key and model):
         return {"status": "not_configured", "message": "VISION_BASE_URL / VISION_API_KEY / VISION_MODEL is required"}
-    prompt = (
-        "你是工业安全巡检视觉工具。只依据图片判断安全风险，输出简体中文 JSON。"
-        "如果发现风险，请返回 findings 数组，每项包含 label、risk_level、confidence、bbox、reason、recommendation。"
-        "bbox 使用 [x_min,y_min,x_max,y_max]，坐标归一化到 0-1000。"
-    )
+    prompt = _load_safety_prompt()
     if instruction:
         prompt += f"\n补充要求：{instruction}"
     async with httpx.AsyncClient(timeout=60) as client:

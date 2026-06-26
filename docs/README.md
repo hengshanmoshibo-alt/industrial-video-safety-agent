@@ -21,6 +21,7 @@ Safety Agent.
 | [Video Safety Agent](video-safety-agent.md) | Product and technical design for the video Agent. |
 | [API](api.md) | Main API surface. |
 | [MCP Client Demo](mcp-client-demo.md) | External Agent integration through MCP tools. |
+| [Prompt Contracts](../prompts/README.md) | Shared VLM prompt and output schema. |
 
 ## Evaluation And Governance
 

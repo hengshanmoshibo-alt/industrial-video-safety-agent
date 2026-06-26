@@ -18,11 +18,21 @@ def test_dev_script_help_lists_core_commands():
     assert "seed" in result.stdout
     assert "docs-check" in result.stdout
     assert "workflow-check" in result.stdout
+    assert "prompt-check" in result.stdout
 
 
 def test_workflow_spec_check_passes():
     subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "check_workflow_spec.py")],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_prompt_contract_check_passes():
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "check_prompt_contract.py")],
         check=True,
         capture_output=True,
         text=True,
