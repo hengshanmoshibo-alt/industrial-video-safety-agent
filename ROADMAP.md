@@ -19,21 +19,25 @@ The goal is to evolve this project from a strong vertical demo into a high-quali
 
 ## v2: High-Star Open Source Experience
 
-- [ ] README screenshots and short demo GIF
+- [x] README screenshots and short demo GIF
 - [ ] hosted sample video outputs with anonymized evidence
-- [ ] GitHub Actions status badge
-- [ ] one-command seed demo
-- [ ] richer English and Chinese docs
+- [x] GitHub Actions status badge
+- [x] one-command seed demo
+- [x] richer English docs
+- [x] developer command runner
+- [x] documentation index and ADRs
+- [x] demo presentation script
 - [ ] public benchmark report from open samples
 
 ## v3: Stronger Agent Architecture
 
-- [ ] explicit state graph for Agent workflow
+- [ ] explicit state graph diagram for Agent workflow
 - [ ] durable resume from every state
 - [ ] branch replay for failed tools
 - [ ] tool-call retry policy and idempotency keys
 - [ ] richer tracing view with artifacts and cost
-- [ ] MCP client demo where another Agent calls this platform
+- [x] MCP stdio client demo for listing tools
+- [ ] MCP client demo where another Agent calls this platform with audit context
 
 ## v4: Better Video Intelligence
 

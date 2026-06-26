@@ -159,8 +159,13 @@ def compose_check(_: argparse.Namespace) -> None:
     run([*COMPOSE, "config", "--quiet"])
 
 
+def docs_check(_: argparse.Namespace) -> None:
+    run([project_python(), "scripts/check_docs.py"])
+
+
 def verify(_: argparse.Namespace) -> None:
     ensure_env()
+    run([project_python(), "scripts/check_docs.py"])
     run([project_python(), "-m", "pytest", "-q"])
     run(["npm", "run", "build"], cwd=FRONTEND)
     run([*COMPOSE, "config", "--quiet"])
@@ -187,6 +192,7 @@ def build_parser() -> argparse.ArgumentParser:
         "test": (test, "Run Python tests."),
         "frontend-build": (frontend_build, "Build the React frontend."),
         "compose-check": (compose_check, "Validate docker-compose.safety.yml."),
+        "docs-check": (docs_check, "Validate local Markdown links."),
         "verify": (verify, "Run tests, frontend build, and compose validation."),
         "mcp-tools": (mcp_tools, "List MCP tools through the stdio client."),
         "api-demo": (api_demo, "Run the API client demo against localhost."),

@@ -14,6 +14,16 @@
 中文定位：**工业安全巡检多模态 Agent 平台**。  
 It is not a generic chatbot demo. It is a vertical Agent application that turns video evidence into an operational safety workflow.
 
+## What Makes It Different
+
+- **Agent-first workflow**: every inspection creates persisted `AgentRun` and `AgentStep` records, not just a final prediction.
+- **Video memory**: key frames become searchable `VideoMemorySegment` records with objects, bbox, evidence text, and raw VLM output.
+- **Grounded evidence**: risk findings include time range, Chinese explanation, remediation advice, confidence, and bbox overlays.
+- **Policy-driven actions**: VLM perception is separated from alert/review/ticket decisions through `SafetyPolicy`.
+- **Human-in-the-loop**: uncertain results pause for supervisor review instead of becoming automatic violation conclusions.
+- **Operational loop**: Feishu alert, remediation ticket, post-remediation evidence, and Agent verification are part of the flow.
+- **Tool ecosystem**: selected capabilities are exposed as MCP tools for external Agent integration.
+
 ## Why This Project
 
 Most safety video demos stop at classification. This project focuses on the full loop:
@@ -185,6 +195,7 @@ This creates one high-risk walkway-obstruction audit with bbox evidence, video m
 
 See [docs/demo.md](docs/demo.md) for the live-demo checklist.
 See [docs/developer-commands.md](docs/developer-commands.md) for all local command shortcuts.
+See [docs/demo-script.md](docs/demo-script.md) for a five-minute presentation script.
 
 ### API Client Example
 
@@ -294,6 +305,8 @@ This project is an inspection assistant. It is not a certified safety system. Hi
 ## Contributing
 
 Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md).
+
+For design rationale, see the [documentation index](docs/README.md) and ADRs in [docs/adr](docs/adr).
 
 Good first areas:
 

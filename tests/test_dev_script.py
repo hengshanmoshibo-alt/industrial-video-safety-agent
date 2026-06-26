@@ -16,3 +16,4 @@ def test_dev_script_help_lists_core_commands():
     assert "doctor" in result.stdout
     assert "verify" in result.stdout
     assert "seed" in result.stdout
+    assert "docs-check" in result.stdout
