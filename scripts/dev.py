@@ -218,6 +218,22 @@ def public_benchmark(args: argparse.Namespace) -> None:
             args.username,
             "--password",
             args.password,
+            "--vision-max-frames",
+            str(max(1, args.vision_max_frames)),
+            "--output",
+            args.output,
+        ]
+    )
+    run(
+        [
+            project_python(),
+            "scripts/render_public_benchmark_report.py",
+            "--input",
+            args.output,
+            "--report",
+            args.report,
+            "--chart",
+            args.chart,
         ]
     )
 
@@ -281,6 +297,9 @@ def build_parser() -> argparse.ArgumentParser:
     public_benchmark_parser.add_argument("--api-base", default="http://localhost:8000")
     public_benchmark_parser.add_argument("--username", default="admin")
     public_benchmark_parser.add_argument("--password", default="Admin123!")
+    public_benchmark_parser.add_argument("--output", default="docs/assets/benchmarks/public-24-one-frame.json")
+    public_benchmark_parser.add_argument("--report", default="docs/assets/benchmarks/public-24-one-frame-report.md")
+    public_benchmark_parser.add_argument("--chart", default="docs/assets/benchmarks/public-24-one-frame-chart.svg")
     public_benchmark_parser.set_defaults(func=public_benchmark)
 
     return parser

@@ -91,7 +91,7 @@ def validate_schema() -> None:
 def validate_code_uses_shared_prompt() -> None:
     worker = load_text(WORKER)
     mcp = load_text(MCP_SERVER)
-    if "SAFETY_SKILL_CANDIDATES" not in worker or "prompts\" / \"safety_inspection_skill.md" not in worker:
+    if "_safety_skill_candidates" not in worker or "prompts\" / \"safety_inspection_skill.md" not in worker:
         fail("video-worker must load the shared prompt from prompts/")
     if "PROMPT_CANDIDATES" not in mcp or "_load_safety_prompt" not in mcp:
         fail("MCP server must load the shared prompt from prompts/")

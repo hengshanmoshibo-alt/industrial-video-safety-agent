@@ -214,6 +214,7 @@ Benchmark 说明见 [docs/benchmark.md](docs/benchmark.md)。
 
 - [smoke-demo-metrics.json](docs/assets/benchmarks/smoke-demo-metrics.json)
 - [smoke-demo-report.md](docs/assets/benchmarks/smoke-demo-report.md)
+- [public-24-one-frame-report.md](docs/assets/benchmarks/public-24-one-frame-report.md)：24 个公开视频、每视频 1 帧的低成本公开评估报告
 
 ![Smoke benchmark chart](docs/assets/benchmarks/smoke-demo-chart.svg)
 

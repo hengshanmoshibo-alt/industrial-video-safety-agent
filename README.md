@@ -231,6 +231,10 @@ A deterministic smoke benchmark artifact is included at [docs/assets/benchmarks/
 The generated smoke report and chart are available at
 [docs/assets/benchmarks/smoke-demo-report.md](docs/assets/benchmarks/smoke-demo-report.md).
 
+The latest low-cost public benchmark used 24 public videos with one VLM-inspected
+frame per video. See
+[docs/assets/benchmarks/public-24-one-frame-report.md](docs/assets/benchmarks/public-24-one-frame-report.md).
+
 ![Smoke benchmark chart](docs/assets/benchmarks/smoke-demo-chart.svg)
 
 The frontend Evaluation Panel shows:

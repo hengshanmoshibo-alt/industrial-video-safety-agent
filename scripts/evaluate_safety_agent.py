@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
+import os
 import subprocess
 import tempfile
 import time
@@ -85,7 +87,7 @@ def risk_label_from_findings(findings: list[dict]) -> str:
     return str(ordered[0].get("label") or "safe_walkway")
 
 
-def evaluate_api(args, rows: list[tuple[Path, int]]) -> None:
+def evaluate_api(args, rows: list[tuple[Path, int]]) -> dict:
     client = httpx.Client(base_url=args.api_base, timeout=120)
     login = client.post("/api/auth/login", json={"username": args.username, "password": args.password})
     login.raise_for_status()
@@ -122,10 +124,10 @@ def evaluate_api(args, rows: list[tuple[Path, int]]) -> None:
             "status": detail["audit"]["status"] if detail else "timeout",
             "processing_seconds": round(time.perf_counter() - started, 3),
         })
-    print_metrics(cases)
+    return build_metrics(cases, args)
 
 
-def evaluate_filenames(rows: list[tuple[Path, int]]) -> None:
+def evaluate_filenames(args, rows: list[tuple[Path, int]]) -> dict:
     cases = []
     for path, label_index in rows:
         lower = path.name.lower()
@@ -147,7 +149,7 @@ def evaluate_filenames(rows: list[tuple[Path, int]]) -> None:
             "status": "filename-baseline",
             "processing_seconds": 0,
         })
-    print_metrics(cases)
+    return build_metrics(cases, args)
 
 
 def extract_frames(video: Path, count: int = 16):
@@ -167,7 +169,7 @@ def extract_frames(video: Path, count: int = 16):
         return [Image.open(path).convert("RGB").copy() for path in paths[:count]]
 
 
-def evaluate_model(args, rows: list[tuple[Path, int]]) -> None:
+def evaluate_model(args, rows: list[tuple[Path, int]]) -> dict:
     import torch
     from torchvision.models.video import r3d_18
     from torchvision.transforms import v2
@@ -211,10 +213,10 @@ def evaluate_model(args, rows: list[tuple[Path, int]]) -> None:
             "expected_index": expected_index,
             "predicted_index": predicted_index,
         })
-    print_metrics(cases)
+    return build_metrics(cases, args)
 
 
-def print_metrics(cases: list[dict]) -> None:
+def build_metrics(cases: list[dict], args: argparse.Namespace) -> dict:
     tp = sum(1 for item in cases if item["expected_unsafe"] and item["predicted_unsafe"])
     fp = sum(1 for item in cases if not item["expected_unsafe"] and item["predicted_unsafe"])
     tn = sum(1 for item in cases if not item["expected_unsafe"] and not item["predicted_unsafe"])
@@ -234,6 +236,13 @@ def print_metrics(cases: list[dict]) -> None:
             matrix[expected][predicted] += 1
     processing_times = [float(item.get("processing_seconds", 0)) for item in cases]
     report = {
+        "benchmark_type": "public_dataset_evaluation",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "mode": args.mode,
+        "data_dir": args.data_dir,
+        "max_samples": args.max_samples,
+        "vision_max_frames": args.vision_max_frames or os.getenv("VISION_MAX_FRAMES", ""),
+        "labels": LABELS,
         "cases": len(cases),
         "binary_unsafe_accuracy": round(accuracy, 3),
         "class_accuracy": round(class_correct / len(cases), 3) if cases else 0,
@@ -246,6 +255,10 @@ def print_metrics(cases: list[dict]) -> None:
         "class_confusion_matrix": matrix,
         "samples": cases,
     }
+    return report
+
+
+def print_metrics(report: dict) -> None:
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
@@ -259,15 +272,22 @@ def main() -> None:
     parser.add_argument("--username", default="admin")
     parser.add_argument("--password", default="Admin123!")
     parser.add_argument("--timeout", type=int, default=180)
+    parser.add_argument("--vision-max-frames", type=int, default=0, help="Metadata only: VLM frame budget used by the API worker.")
+    parser.add_argument("--output", default="", help="Optional JSON output path.")
     args = parser.parse_args()
 
     rows = discover_videos(Path(args.data_dir), args.max_samples)
     if args.mode == "api":
-        evaluate_api(args, rows)
+        report = evaluate_api(args, rows)
     elif args.mode == "model":
-        evaluate_model(args, rows)
+        report = evaluate_model(args, rows)
     else:
-        evaluate_filenames(rows)
+        report = evaluate_filenames(args, rows)
+    print_metrics(report)
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

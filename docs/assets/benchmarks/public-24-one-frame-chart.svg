@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="352" viewBox="0 0 800 352" role="img" aria-labelledby="title desc">
+  <title id="title">Public safety video benchmark</title>
+  <desc id="desc">Benchmark metrics for public safety videos using the deployed API workflow.</desc>
+  <style>
+    .bg { fill: #ffffff; }
+    .title { font: 700 22px Arial, sans-serif; fill: #111827; }
+    .subtitle { font: 14px Arial, sans-serif; fill: #667085; }
+    .label { font: 14px Arial, sans-serif; fill: #1f2937; }
+    .value { font: 700 14px Arial, sans-serif; fill: #111827; }
+    .track { fill: #e5e7eb; }
+    .bar { fill: #2563eb; }
+  </style>
+  <rect class="bg" width="800" height="352" rx="8"/>
+  <text x="32" y="36" class="title">Public Safety Video Benchmark</text>
+  <text x="32" y="60" class="subtitle">24 samples, VLM frame budget: 1</text>
+  <text x="32" y="107" class="label">Unsafe recall</text><rect x="270" y="86" width="360" height="24" rx="4" class="track"/><rect x="270" y="86" width="360" height="24" rx="4" class="bar"/><text x="650" y="105" class="value">100.0%</text>
+  <text x="32" y="163" class="label">High / critical recall</text><rect x="270" y="142" width="360" height="24" rx="4" class="track"/><rect x="270" y="142" width="360" height="24" rx="4" class="bar"/><text x="650" y="161" class="value">100.0%</text>
+  <text x="32" y="219" class="label">End-to-end success</text><rect x="270" y="198" width="360" height="24" rx="4" class="track"/><rect x="270" y="198" width="360" height="24" rx="4" class="bar"/><text x="650" y="217" class="value">100.0%</text>
+  <text x="32" y="275" class="label">Avg latency</text><rect x="270" y="254" width="360" height="24" rx="4" class="track"/><rect x="270" y="254" width="360" height="24" rx="4" class="bar"/><text x="650" y="273" class="value">7.5s</text>
+</svg>

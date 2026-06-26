@@ -59,3 +59,13 @@ def test_public_benchmark_help_runs():
         text=True,
     )
     assert "--vision-max-frames" in result.stdout
+
+
+def test_public_benchmark_report_renderer_help_runs():
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "render_public_benchmark_report.py"), "--help"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "Render public benchmark report" in result.stdout

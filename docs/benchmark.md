@@ -83,6 +83,12 @@ The evaluation script reports:
 - confusion matrix,
 - per-sample outputs.
 
+Latest committed public benchmark artifacts:
+
+- [public-24-one-frame.json](assets/benchmarks/public-24-one-frame.json)
+- [public-24-one-frame-report.md](assets/benchmarks/public-24-one-frame-report.md)
+- [public-24-one-frame-chart.svg](assets/benchmarks/public-24-one-frame-chart.svg)
+
 ## What To Publish In Releases
 
 For credible open-source releases, attach:

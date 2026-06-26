@@ -73,15 +73,15 @@ RISK_LEVEL_TEXT = {
 }
 
 
-SAFETY_SKILL_CANDIDATES = [
-    Path(__file__).resolve().parents[2] / "prompts" / "safety_inspection_skill.md",
-    Path(__file__).resolve().parents[3] / "prompts" / "safety_inspection_skill.md",
-    Path(__file__).resolve().parent / "prompts" / "safety_inspection_skill.md",
-]
+def _safety_skill_candidates() -> list[Path]:
+    current = Path(__file__).resolve()
+    candidates = [current.parent / "prompts" / "safety_inspection_skill.md"]
+    candidates.extend(parent / "prompts" / "safety_inspection_skill.md" for parent in current.parents)
+    return candidates
 
 
 def load_safety_skill_prompt() -> str:
-    for path in SAFETY_SKILL_CANDIDATES:
+    for path in _safety_skill_candidates():
         if path.exists():
             return path.read_text(encoding="utf-8")
     raise FileNotFoundError("safety_inspection_skill.md was not found")

@@ -58,4 +58,5 @@ python scripts/dev.py public-benchmark --max-samples 24 --vision-max-frames 1
 ```
 
 The command updates `VISION_MAX_FRAMES` in `.env`, restarts `video-worker`, and
-then runs `scripts/evaluate_safety_agent.py --mode api`.
+then runs `scripts/evaluate_safety_agent.py --mode api`. It also renders the
+JSON result into a Markdown report and SVG chart under `docs/assets/benchmarks`.
