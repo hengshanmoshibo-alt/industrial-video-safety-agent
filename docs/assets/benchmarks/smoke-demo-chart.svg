@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="324" viewBox="0 0 760 324" role="img" aria-labelledby="title desc">
+  <title id="title">Industrial Video Safety Agent smoke benchmark</title>
+  <desc id="desc">Smoke benchmark metrics for deterministic seeded demo.</desc>
+  <style>
+    .bg { fill: #ffffff; }
+    .title { font: 700 22px Arial, sans-serif; fill: #111827; }
+    .subtitle { font: 14px Arial, sans-serif; fill: #667085; }
+    .label { font: 14px Arial, sans-serif; fill: #1f2937; }
+    .value { font: 700 14px Arial, sans-serif; fill: #111827; }
+    .track { fill: #e5e7eb; }
+    .bar { fill: #1677ff; }
+  </style>
+  <rect class="bg" width="760" height="324" rx="8"/>
+  <text x="32" y="34" class="title">Smoke Demo Benchmark</text>
+  <text x="32" y="56" class="subtitle">Workflow integrity metrics generated from committed JSON artifact.</text>
+  <text x="32" y="93" class="label">Processing success</text><rect x="260" y="72" width="360" height="24" rx="4" class="track"/><rect x="260" y="72" width="360" height="24" rx="4" class="bar"/><text x="640" y="91" class="value">100%</text>
+  <text x="32" y="147" class="label">BBox validity</text><rect x="260" y="126" width="360" height="24" rx="4" class="track"/><rect x="260" y="126" width="360" height="24" rx="4" class="bar"/><text x="640" y="145" class="value">100%</text>
+  <text x="32" y="201" class="label">Feishu alert success</text><rect x="260" y="180" width="360" height="24" rx="4" class="track"/><rect x="260" y="180" width="360" height="24" rx="4" class="bar"/><text x="640" y="199" class="value">100%</text>
+  <text x="32" y="255" class="label">High-risk alerts</text><rect x="260" y="234" width="360" height="24" rx="4" class="track"/><rect x="260" y="234" width="360" height="24" rx="4" class="bar"/><text x="640" y="253" class="value">1</text>
+</svg>

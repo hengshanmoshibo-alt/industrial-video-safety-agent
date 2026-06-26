@@ -34,6 +34,7 @@ Open `http://localhost:5173` and log in with `admin / Admin123!`.
 | `docs-check` | Validate local Markdown links. |
 | `workflow-check` | Validate the safety Agent workflow spec against code and docs. |
 | `prompt-check` | Validate the VLM prompt and output schema contract. |
+| `benchmark-report` | Generate the smoke benchmark Markdown report and SVG chart. |
 | `verify` | Run tests, frontend build, and compose validation. |
 | `mcp-tools` | List MCP tools through the stdio client. |
 | `api-demo` | Run the API client example against localhost. |

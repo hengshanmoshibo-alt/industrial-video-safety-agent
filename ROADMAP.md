@@ -27,6 +27,7 @@ The goal is to evolve this project from a strong vertical demo into a high-quali
 - [x] developer command runner
 - [x] documentation index and ADRs
 - [x] demo presentation script
+- [x] smoke benchmark report with chart
 - [ ] public benchmark report from open samples
 
 ## v3: Stronger Agent Architecture

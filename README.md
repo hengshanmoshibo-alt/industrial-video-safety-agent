@@ -241,6 +241,10 @@ python scripts/evaluate_safety_agent.py --mode api --max-samples 24
 See [docs/benchmark.md](docs/benchmark.md) for smoke benchmark and public dataset evaluation guidance.
 
 A deterministic smoke benchmark artifact is included at [docs/assets/benchmarks/smoke-demo-metrics.json](docs/assets/benchmarks/smoke-demo-metrics.json).
+The generated smoke report and chart are available at
+[docs/assets/benchmarks/smoke-demo-report.md](docs/assets/benchmarks/smoke-demo-report.md).
+
+![Smoke benchmark chart](docs/assets/benchmarks/smoke-demo-chart.svg)
 
 The frontend Evaluation Panel shows:
 

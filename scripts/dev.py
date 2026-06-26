@@ -171,6 +171,10 @@ def prompt_check(_: argparse.Namespace) -> None:
     run([project_python(), "scripts/check_prompt_contract.py"])
 
 
+def benchmark_report(_: argparse.Namespace) -> None:
+    run([project_python(), "scripts/generate_benchmark_report.py"])
+
+
 def verify(_: argparse.Namespace) -> None:
     ensure_env()
     run([project_python(), "scripts/check_docs.py"])
@@ -205,6 +209,7 @@ def build_parser() -> argparse.ArgumentParser:
         "docs-check": (docs_check, "Validate local Markdown links."),
         "workflow-check": (workflow_check, "Validate the safety Agent workflow spec."),
         "prompt-check": (prompt_check, "Validate the VLM prompt and output schema contract."),
+        "benchmark-report": (benchmark_report, "Generate benchmark report and SVG chart artifacts."),
         "verify": (verify, "Run tests, frontend build, and compose validation."),
         "mcp-tools": (mcp_tools, "List MCP tools through the stdio client."),
         "api-demo": (api_demo, "Run the API client demo against localhost."),
