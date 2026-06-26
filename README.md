@@ -218,8 +218,12 @@ Run API-level evaluation with public samples:
 
 ```bash
 python scripts/download_safety_dataset.py
-python scripts/evaluate_safety_agent.py --mode api --max-samples 24
+python scripts/dev.py public-benchmark --max-samples 24 --vision-max-frames 1
 ```
+
+The public benchmark command uses one VLM-inspected frame per video by default
+to keep cost predictable. Increase `--vision-max-frames` for a higher-recall
+evaluation.
 
 See [docs/benchmark.md](docs/benchmark.md) for smoke benchmark and public dataset evaluation guidance.
 

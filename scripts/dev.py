@@ -80,6 +80,23 @@ def ensure_env() -> None:
     print("Created .env from .env.example", flush=True)
 
 
+def set_env_value(key: str, value: str) -> None:
+    ensure_env()
+    lines = ENV_FILE.read_text(encoding="utf-8").splitlines()
+    prefix = f"{key}="
+    updated = False
+    next_lines: list[str] = []
+    for line in lines:
+        if line.startswith(prefix):
+            next_lines.append(f"{key}={value}")
+            updated = True
+        else:
+            next_lines.append(line)
+    if not updated:
+        next_lines.append(f"{key}={value}")
+    ENV_FILE.write_text("\n".join(next_lines) + "\n", encoding="utf-8")
+
+
 def check_tool(name: str, args: list[str], required: bool = True) -> bool:
     path = shutil.which(name)
     if not path:
@@ -175,6 +192,36 @@ def benchmark_report(_: argparse.Namespace) -> None:
     run([project_python(), "scripts/generate_benchmark_report.py"])
 
 
+def public_benchmark(args: argparse.Namespace) -> None:
+    ensure_env()
+    set_env_value("VISION_MAX_FRAMES", str(max(1, args.vision_max_frames)))
+    print(
+        f"Configured VISION_MAX_FRAMES={max(1, args.vision_max_frames)} for public dataset benchmark.",
+        flush=True,
+    )
+    run([*COMPOSE, "up", "-d", "--force-recreate", "video-worker"])
+    run(
+        [
+            project_python(),
+            "scripts/evaluate_safety_agent.py",
+            "--mode",
+            "api",
+            "--data-dir",
+            args.data_dir,
+            "--max-samples",
+            str(args.max_samples),
+            "--timeout",
+            str(args.timeout),
+            "--api-base",
+            args.api_base,
+            "--username",
+            args.username,
+            "--password",
+            args.password,
+        ]
+    )
+
+
 def verify(_: argparse.Namespace) -> None:
     ensure_env()
     run([project_python(), "scripts/check_docs.py"])
@@ -225,6 +272,16 @@ def build_parser() -> argparse.ArgumentParser:
     logs_parser = sub.add_parser("logs", help="Follow Docker Compose logs.")
     logs_parser.add_argument("service", nargs="?", help="Optional service name, for example video-worker.")
     logs_parser.set_defaults(func=logs)
+
+    public_benchmark_parser = sub.add_parser("public-benchmark", help="Run public dataset API benchmark with a VLM frame budget.")
+    public_benchmark_parser.add_argument("--data-dir", default="data/safe_unsafe_behaviours")
+    public_benchmark_parser.add_argument("--max-samples", type=int, default=24)
+    public_benchmark_parser.add_argument("--vision-max-frames", type=int, default=1)
+    public_benchmark_parser.add_argument("--timeout", type=int, default=180)
+    public_benchmark_parser.add_argument("--api-base", default="http://localhost:8000")
+    public_benchmark_parser.add_argument("--username", default="admin")
+    public_benchmark_parser.add_argument("--password", default="Admin123!")
+    public_benchmark_parser.set_defaults(func=public_benchmark)
 
     return parser
 

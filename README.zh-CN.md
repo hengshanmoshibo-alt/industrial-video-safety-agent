@@ -203,8 +203,10 @@ python scripts/dev.py verify
 
 ```bash
 python scripts/download_safety_dataset.py
-python scripts/evaluate_safety_agent.py --mode api --max-samples 24
+python scripts/dev.py public-benchmark --max-samples 24 --vision-max-frames 1
 ```
+
+公开视频 benchmark 默认每个视频只送 1 帧给视觉大模型，以控制评估成本；如果要提高召回率，可以调大 `--vision-max-frames`。
 
 Benchmark 说明见 [docs/benchmark.md](docs/benchmark.md)。
 

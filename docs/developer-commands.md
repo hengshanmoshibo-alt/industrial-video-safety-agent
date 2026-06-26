@@ -35,6 +35,7 @@ Open `http://localhost:5173` and log in with `admin / Admin123!`.
 | `workflow-check` | Validate the safety Agent workflow spec against code and docs. |
 | `prompt-check` | Validate the VLM prompt and output schema contract. |
 | `benchmark-report` | Generate the smoke benchmark Markdown report and SVG chart. |
+| `public-benchmark` | Run public dataset API benchmark with an explicit VLM frame budget. |
 | `verify` | Run tests, frontend build, and compose validation. |
 | `mcp-tools` | List MCP tools through the stdio client. |
 | `api-demo` | Run the API client example against localhost. |
@@ -46,3 +47,15 @@ The same gates used by CI can be run locally:
 ```bash
 python scripts/dev.py verify
 ```
+
+## Low-Cost Public Benchmark
+
+Use one VLM-inspected frame per video when you want predictable benchmark cost:
+
+```bash
+python scripts/download_safety_dataset.py
+python scripts/dev.py public-benchmark --max-samples 24 --vision-max-frames 1
+```
+
+The command updates `VISION_MAX_FRAMES` in `.env`, restarts `video-worker`, and
+then runs `scripts/evaluate_safety_agent.py --mode api`.

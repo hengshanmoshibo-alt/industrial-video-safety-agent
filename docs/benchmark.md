@@ -59,7 +59,17 @@ python scripts/download_safety_dataset.py
 Run API evaluation:
 
 ```bash
-python scripts/evaluate_safety_agent.py --mode api --max-samples 24
+python scripts/dev.py public-benchmark --max-samples 24 --vision-max-frames 1
+```
+
+The default public benchmark command uses one VLM-inspected frame per video to
+keep cost predictable. It writes `VISION_MAX_FRAMES=1` to `.env`, restarts the
+`video-worker`, and then uploads the selected videos through the API.
+
+For a higher-recall benchmark, increase the frame budget:
+
+```bash
+python scripts/dev.py public-benchmark --max-samples 24 --vision-max-frames 5
 ```
 
 The evaluation script reports:
@@ -79,6 +89,7 @@ For credible open-source releases, attach:
 
 - hardware and model configuration,
 - dataset subset and exact command,
+- VLM frame budget, for example `VISION_MAX_FRAMES=1`,
 - model/provider version,
 - full JSON evaluation output,
 - false-positive examples,

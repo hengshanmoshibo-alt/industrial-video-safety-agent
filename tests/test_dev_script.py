@@ -20,6 +20,7 @@ def test_dev_script_help_lists_core_commands():
     assert "workflow-check" in result.stdout
     assert "prompt-check" in result.stdout
     assert "benchmark-report" in result.stdout
+    assert "public-benchmark" in result.stdout
 
 
 def test_workflow_spec_check_passes():
@@ -48,3 +49,13 @@ def test_benchmark_report_generator_help_runs():
         text=True,
     )
     assert "Generate benchmark report" in result.stdout
+
+
+def test_public_benchmark_help_runs():
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "dev.py"), "public-benchmark", "--help"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "--vision-max-frames" in result.stdout
