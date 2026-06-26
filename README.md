@@ -1,5 +1,7 @@
 # Industrial Video Safety Agent
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 > Multimodal Agent platform for industrial and warehouse safety inspection.
 > Upload an inspection video, let a vision-language model ground risks with bounding boxes, trigger alerts, route human review, create remediation tickets, and verify the fix.
 
@@ -12,6 +14,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 中文定位：**工业安全巡检多模态 Agent 平台**。  
+Chinese positioning: **industrial safety inspection multimodal Agent platform**.
 It is not a generic chatbot demo. It is a vertical Agent application that turns video evidence into an operational safety workflow.
 
 ## What Makes It Different
